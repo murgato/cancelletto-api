@@ -7,6 +7,11 @@ export class ResponseDto {
     @ApiProperty({ type: String, description: 'message' })
     message: string;
     @ApiProperty({ type: Array, description: 'registers' })
-    registers?: any
+    contains?: contains
 
+}
+
+interface contains {
+    access_token?: string
+    register?: any
 }

@@ -20,7 +20,6 @@ export class UsersService {
     async createUser(userResquest: UserCreteDto): Promise<ResponseDto> {
         try {
             let hasUsername = await this.usersRepository.find({ where: { userName: userResquest.userName } })
-            console.log(hasUsername)
 
             if (hasUsername.length > 0) {
                 return <ResponseDto>{
@@ -39,9 +38,10 @@ export class UsersService {
 
             let user = new Users()
             user = {
-                ...user, name: userResquest.name,
-                userName: userResquest.userName,
-                email: userResquest.email,
+                ...user,
+                name: userResquest.name,
+                userName: userResquest.userName.toLowerCase(),
+                email: userResquest.email.toLowerCase(),
                 password: bcrypt.hashSync(userResquest.password, 8),
                 dateBorn: userResquest.dateBorn,
                 height: userResquest.height,
@@ -51,7 +51,6 @@ export class UsersService {
             }
             return await this.usersRepository.save(user)
                 .then((response) => {
-                    console.log(response)
                     return <ResponseDto>{
                         success: true,
                         message: 'Usuario cadastrado com sucesso',
