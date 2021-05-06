@@ -2,11 +2,11 @@ import { Body, Controller, Get, Post, Request, UseGuards, UseInterceptors } from
 import { AuthGuard } from '@nestjs/passport';
 import { ApiCreatedResponse, ApiTags, } from '@nestjs/swagger';
 import { MorganInterceptor } from 'nest-morgan';
-import { authenticateDto } from 'src/dto/authenticate.dto';
+import { AuthDto } from 'src/dto/Auth.dto';
 import { ResponseDto } from 'src/dto/response.dto';
 import { UserCreteDto } from 'src/dto/user.create.dto';
 import { Users } from 'src/entities/users.entity';
-import { AuthenticateService } from 'src/services/Authenticate.service';
+import { AuthService } from 'src/services/Auth.service';
 import { UsersService } from '../services/users.service';
 
 @ApiTags('users')
@@ -14,7 +14,7 @@ import { UsersService } from '../services/users.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly authService: AuthenticateService
+    private readonly authService: AuthService
 
   ) { }
   @UseInterceptors(MorganInterceptor('combined'))
@@ -30,12 +30,4 @@ export class UsersController {
     return await this.usersService.createUser(user)
   }
 
-  @UseInterceptors(MorganInterceptor('combined'))
-  @Post('login')
-  @ApiCreatedResponse({ type: authenticateDto })
-  @UseGuards(AuthGuard('local'))
-  async login(@Request() auth: any) {
-    console.log(auth.user)
-    return this.authService.login(auth.user);
-  }
 }

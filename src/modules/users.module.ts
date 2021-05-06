@@ -3,12 +3,12 @@ import { UsersController } from 'src/controllers/users.controllers';
 import { DatabaseModule } from '../database/database.module';
 import { usersProviders } from '../providers/users.providers';
 import { UsersService } from '../services/users.service';
-import { AuthenticateModule } from './authenticate.module';
+import { AuthModule } from './Auth.module';
 
 @Module({
   imports: [
     DatabaseModule,
-    AuthenticateModule
+    AuthModule
   ],
 
   controllers: [UsersController],

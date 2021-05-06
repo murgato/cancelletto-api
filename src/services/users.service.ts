@@ -4,7 +4,7 @@ import { UserCreteDto } from 'src/dto/user.create.dto';
 import { Repository } from 'typeorm';
 import { Users } from '../entities/users.entity';
 import * as bcrypt from 'bcrypt'
-import { authenticateDto } from 'src/dto/authenticate.dto';
+import { AuthDto } from 'src/dto/Auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -65,7 +65,7 @@ export class UsersService {
             }
         }
     }
-    async findOne(authResquest: authenticateDto) {
+    async findOne(authResquest: AuthDto): Promise<Users | undefined> {
 
         let user = await this.usersRepository
             .findOne({

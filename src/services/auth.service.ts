@@ -1,28 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { authenticateDto } from 'src/dto/authenticate.dto';
+import { AuthDto } from 'src/dto/Auth.dto';
 import { UsersService } from './users.service';
 import * as bcrypt from 'bcrypt'
 import { ResponseDto } from 'src/dto/response.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class AuthenticateService {
+export class AuthService {
     constructor(
         private usersService: UsersService,
         private jwtService: JwtService
     ) { }
 
-    async authenticate(authResquest: authenticateDto): Promise<ResponseDto> {
+    async validateUser(authResquest: AuthDto): Promise<ResponseDto> {
 
         let user = await this.usersService.findOne(authResquest)
         if (user && bcrypt.compareSync(authResquest.password, user.password)) {
             return <ResponseDto>{
                 success: true,
                 message: 'Usuario logado com sucesso',
-                registers: {
-                    userName: user.userName,
-                    email: user.email,
-                    password: user.password
+
+                contains: {
+                    registers: {
+                        userName: user.userName,
+                        email: user.email,
+                        password: user.password
+                    }
                 }
             }
         } else {
@@ -33,13 +36,18 @@ export class AuthenticateService {
         }
     }
     async login(user: any): Promise<ResponseDto> {
-      //  const payload = { username: user.username, sub: user.userId };
-      //  let token = this.jwtService.sign(payload)
+        const payload = {
+            username: user.username,
+            email: user.email,
+            password: user.password
+        };
+        
+        let token = this.jwtService.sign(payload)
         return {
             success: true,
             message: '',
             contains: {
-                //access_token: token
+                access_token: token
             },
         };
     }
